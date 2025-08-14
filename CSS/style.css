@@ -1,0 +1,30 @@
+.card{
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1% 35% 35%;
+}
+
+.card-body{
+    text-align: center;
+}
+
+.base{
+    margin: auto;
+    width: 60%;
+}
+
+.sistemasGuardados{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.mostrarguardados{
+    margin-top: 0;
+    margin-left: 10px;
+    margin-right: 20px;
+    margin-bottom: 0 !important;
+}

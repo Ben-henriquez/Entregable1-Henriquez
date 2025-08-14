@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+        crossorigin="anonymous"
+    />
+    <link href="CSS/style.css" rel="stylesheet" />
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"
+    ></script>
+    <script defer src="JS/main.js"></script>
+    <title>Entrega 2 JS</title>
+</head>
+<body class="p-4">
+    <div class="card base">
+        <img src="https://res.cloudinary.com/dmcvdsh4c/image/upload/v1712591729/iceebookImage/ciencia/astronomia/el-origen-del-sistema-solar-formacion-y-evolucion_z0pnrs.webp" class="card-img-top" alt="sistema solar" />
+        <div class="card-body">
+            <h3 class="card-title">Crea tu sistema solar</h3>
+            <p class="card-text mt-3">
+            Este simulador permite al usuario crear su propio sistema solar, <b>el total de masa permitido es de 1000 por cada sistema solar</b> que cree el usuario.
+            </p>
+            <!--Sistemas guardados-->
+            <div class="mt-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Sistemas guardados</h4>
+                    <button id="btnLimpiarSistemas" class="btn btn-outline-danger btn-sm">
+                    Borrar todos
+                    </button>
+                </div>
+                <div id="sistemasGuardadosVacio" class="text-muted">Aún no hay sistemas guardados.</div>
+                <div id="sistemasGuardados" class="mt-2 sistemasGuardados"></div>
+            </div>
+
+            <!--Botón para mostrar el formulario-->
+            <button id="btnMostrarFormulario" class="btn btn-primary mt-2">
+                Agregar Planeta a mi Sistema Solar
+            </button>
+
+            <!--Formulario-->
+            <form id="AgregarPlaneta" class="mt-4" style="display: none;">
+                <div class="mb-3">
+                    <label for="nombrePlaneta" class="form-label">Nombre de tu Planeta</label>
+                    <input type="text" class="form-control" id="nombrePlaneta" placeholder="Ej: Mustafar" required />
+                </div>
+                <div class="mb-3">
+                    <label for="masaPlaneta" class="form-label">Masa</label>
+                    <input type="number" class="form-control" id="masaPlaneta" placeholder="Ej: 20" step="0.01" min="0" required />
+                </div>
+                <div class="mb-3">
+                    <label for="cantidadPlaneta" class="form-label">Cantidad</label>
+                    <input type="number" class="form-control" id="cantidadPlaneta" placeholder="Ej: 2" min="1" required />
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-success" id="btnGuardar">Guardar Planeta</button>
+                    <button type="button" id="btnCancelar" class="btn btn-secondary">Cancelar</button>
+                </div>
+            </form>
+
+            <!--Resumen-->
+            <div id="resumen" class="mt-4" style="display: none;">
+                <div class="alert alert-info mb-0">
+                    <div class="d-flex flex-column flex-md-row justify-content-between gap-2">
+                        <span><strong>Cantidad total de planetas:</strong> <span id="resumenCantidad">0</span></span>
+                        <span><strong>Masa total de planetas:</strong> <span id="resumenMasaTotal">0</span></span>
+                        <span><strong>Masa restante del Sistema Solar (1000):</strong> <span id="resumenRestante">1000</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <!--Nombrar sistema-->
+            <div id="nominadorSistema" class="mt-3" style="display: none;">
+                <div class="card card-body">
+                    <label for="nombreSistema" class="form-label mb-1">Nombre del Sistema Solar</label>
+                    <input type="text" id="nombreSistema" class="form-control" placeholder="Ej: Sistema de Ben Kenobi">
+                    <div class="d-flex gap-2 mt-2">
+                        <button id="btnGuardarSistemaNombrado" class="btn btn-success">Guardar sistema</button>
+                        <button id="btnCancelarNominador" class="btn btn-outline-secondary">Cancelar</button>
+                    </div>
+                    <small class="text-muted mt-1">Este nombre aparecerá en la lista de sistemas guardados.</small>
+                </div>
+            </div>
+
+            <!--Acciones-->
+            <div id="accionesResumen" class="mt-3" style="display: none;">
+                <div class="d-flex flex-wrap gap-2">
+                    <button id="btnSeguirAgregando" class="btn btn-outline-primary">Seguir agregando planetas</button>
+                    <button id="btnTerminarSistema" class="btn btn-danger">Terminar este sistema</button>
+                </div>
+            </div>
+
+            <!--Mensaje final-->
+            <div id="mensajeFinal" class="alert alert-success mt-4" style="display: none;">
+                Sistema solar listo. Ya no se pueden agregar más planetas.
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
