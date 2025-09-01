@@ -1,106 +1,130 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-        crossorigin="anonymous"
-    />
-    <link href="CSS/style.css" rel="stylesheet" />
-    <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"
-    ></script>
-    <script defer src="JS/main.js"></script>
-    <title>Entrega 2 JS</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Entrega Final</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+
+  <!-- Tu CSS -->
+  <link href="CSS/style.css" rel="stylesheet" />
 </head>
 <body class="p-4">
-    <div class="card base">
-        <img src="https://res.cloudinary.com/dmcvdsh4c/image/upload/v1712591729/iceebookImage/ciencia/astronomia/el-origen-del-sistema-solar-formacion-y-evolucion_z0pnrs.webp" class="card-img-top" alt="sistema solar" />
-        <div class="card-body">
-            <h3 class="card-title">Crea tu sistema solar</h3>
-            <p class="card-text mt-3">
-            Este simulador permite al usuario crear su propio sistema solar, <b>el total de masa permitido es de 1000 por cada sistema solar</b> que cree el usuario.
-            </p>
-            <!--Sistemas guardados-->
-            <div class="mt-4">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h4 class="mb-0">Sistemas guardados</h4>
-                    <button id="btnLimpiarSistemas" class="btn btn-outline-danger btn-sm">
-                    Borrar todos
-                    </button>
-                </div>
-                <div id="sistemasGuardadosVacio" class="text-muted">Aún no hay sistemas guardados.</div>
-                <div id="sistemasGuardados" class="mt-2 sistemasGuardados"></div>
-            </div>
+    <video autoplay muted loop class="video-background">
+        <source src="IMG\fondo.mp4" type="video/mp4">
+    </video>
+  <div class="card">
+    <img src="https://res.cloudinary.com/dmcvdsh4c/image/upload/v1712591729/iceebookImage/ciencia/astronomia/el-origen-del-sistema-solar-formacion-y-evolucion_z0pnrs.webp"
+         class="card-img-top" alt="Sistema Solar" />
+    <div class="card-body">
+      <h3 class="card-title">Entrega Final</h3>
+      <p class="card-text mt-3">Crea tu propio sistema solar.</p>
+      <!-- Mensajes UX (sin alert/confirm) -->
+      <div id="msg"></div>
+    </div>
+  </div>
 
-            <!--Botón para mostrar el formulario-->
-            <button id="btnMostrarFormulario" class="btn btn-primary mt-2">
-                Agregar Planeta a mi Sistema Solar
-            </button>
-
-            <!--Formulario-->
-            <form id="AgregarPlaneta" class="mt-4" style="display: none;">
-                <div class="mb-3">
-                    <label for="nombrePlaneta" class="form-label">Nombre de tu Planeta</label>
-                    <input type="text" class="form-control" id="nombrePlaneta" placeholder="Ej: Mustafar" required />
-                </div>
-                <div class="mb-3">
-                    <label for="masaPlaneta" class="form-label">Masa</label>
-                    <input type="number" class="form-control" id="masaPlaneta" placeholder="Ej: 20" step="0.01" min="0" required />
-                </div>
-                <div class="mb-3">
-                    <label for="cantidadPlaneta" class="form-label">Cantidad</label>
-                    <input type="number" class="form-control" id="cantidadPlaneta" placeholder="Ej: 2" min="1" required />
-                </div>
-                <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-success" id="btnGuardar">Guardar Planeta</button>
-                    <button type="button" id="btnCancelar" class="btn btn-secondary">Cancelar</button>
-                </div>
+  <!-- ===== Builder ===== -->
+  <section class="mt-4">
+    <div class="row g-3">
+      <!-- Formulario -->
+      <div class="col-12 col-lg-6 cardAgregar">
+        <div class="card agregar">
+          <div class="card-body">
+            <h5 class="mb-3">Agregar planeta</h5>
+            <form id="form-add-planet" class="row g-2">
+              <div class="col-12">
+                <label class="form-label" for="nombrePlaneta">Nombre</label>
+                <input class="form-control" name="nombre" id="nombrePlaneta" placeholder="Ej: Krypton" required />
+              </div>
+              <div class="col-6">
+                <label class="form-label" for="masaPlaneta">Masa</label>
+                <input class="form-control" name="masa" id="masaPlaneta" type="number" step="0.01" min="0" placeholder="Ej: 20" required />
+              </div>
+              <div class="col-6">
+                <label class="form-label" for="cantidadPlaneta">Cantidad</label>
+                <input class="form-control" name="cantidad" id="cantidadPlaneta" type="number" min="1" step="1" value="1" required />
+              </div>
+              <div class="col-12 d-flex gap-2">
+                <button class="btn btn-success" type="submit">Agregar</button>
+                <button class="btn btn-outline-secondary" type="button" id="btnNuevoSistema">Nuevo sistema</button>
+              </div>
             </form>
 
-            <!--Resumen-->
-            <div id="resumen" class="mt-4" style="display: none;">
-                <div class="alert alert-info mb-0">
-                    <div class="d-flex flex-column flex-md-row justify-content-between gap-2">
-                        <span><strong>Cantidad total de planetas:</strong> <span id="resumenCantidad">0</span></span>
-                        <span><strong>Masa total de planetas:</strong> <span id="resumenMasaTotal">0</span></span>
-                        <span><strong>Masa restante del Sistema Solar (1000):</strong> <span id="resumenRestante">1000</span></span>
-                    </div>
-                </div>
+            <!-- Nombrar sistema (se muestra al terminar) -->
+            <div id="builderName" class="mt-3 d-none">
+              <label class="form-label" for="inputSystemName">Nombre del sistema</label>
+              <input class="form-control mb-2" id="inputSystemName" placeholder="Ej: Sistema de Juan" />
+              <div class="d-flex gap-2">
+                <button class="btn btn-primary" id="btnGuardarSistema">Guardar sistema</button>
+                <button class="btn btn-outline-secondary" id="btnCancelarNombre">Cancelar</button>
+              </div>
             </div>
 
-            <!--Nombrar sistema-->
-            <div id="nominadorSistema" class="mt-3" style="display: none;">
-                <div class="card card-body">
-                    <label for="nombreSistema" class="form-label mb-1">Nombre del Sistema Solar</label>
-                    <input type="text" id="nombreSistema" class="form-control" placeholder="Ej: Sistema de Ben Kenobi">
-                    <div class="d-flex gap-2 mt-2">
-                        <button id="btnGuardarSistemaNombrado" class="btn btn-success">Guardar sistema</button>
-                        <button id="btnCancelarNominador" class="btn btn-outline-secondary">Cancelar</button>
-                    </div>
-                    <small class="text-muted mt-1">Este nombre aparecerá en la lista de sistemas guardados.</small>
-                </div>
+            <div class="mt-3">
+              <button class="btn btn-danger" id="btnTerminarSistema">Terminar este sistema</button>
             </div>
-
-            <!--Acciones-->
-            <div id="accionesResumen" class="mt-3" style="display: none;">
-                <div class="d-flex flex-wrap gap-2">
-                    <button id="btnSeguirAgregando" class="btn btn-outline-primary">Seguir agregando planetas</button>
-                    <button id="btnTerminarSistema" class="btn btn-danger">Terminar este sistema</button>
-                </div>
-            </div>
-
-            <!--Mensaje final-->
-            <div id="mensajeFinal" class="alert alert-success mt-4" style="display: none;">
-                Sistema solar listo. Ya no se pueden agregar más planetas.
-            </div>
+          </div>
         </div>
-    </div>
+      </div>
 
+      <!-- Resumen + tabla (las filas las inserta JS) -->
+      <div class="col-12 col-lg-6">
+        <div class="card resumen">
+          <div class="card-body">
+            <h5 class="mb-3">Resumen</h5>
+            <ul class="list-group mb-3">
+              <li class="list-group-item d-flex justify-content-between">
+                <span>Cantidad total de planetas</span><strong id="sumCantidad">0</strong>
+              </li>
+              <li class="list-group-item d-flex justify-content-between">
+                <span>Masa total de planetas</span><strong id="sumMasa">0</strong>
+              </li>
+              <li class="list-group-item d-flex justify-content-between">
+                <span>Masa restante (cap 1.000)</span><strong id="sumRestante">1.000</strong>
+              </li>
+            </ul>
+
+            <h6 class="mb-2">Planetas agregados</h6>
+            <div class="table-responsive">
+              <table class="table table-sm align-middle">
+                <thead><tr><th>Nombre</th><th>Masa</th><th>Cantidad</th><th class="text-end">Acciones</th></tr></thead>
+                <tbody id="builderRows">
+                  <!-- JS inserta las filas aquí -->
+                  <tr><td colspan="4" class="text-muted">Aún no agregas planetas.</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Sistemas guardados (las tarjetas las genera JS) ===== -->
+  <section class="mt-4">
+    <div class="d-flex justify-content-between align-items-center sistemasGuardados">
+      <h4 class="mb-0 texto">Sistemas guardados</h4>
+      <button class="btn btn-outline-danger btn-sm" id="btnLimpiarSistemas texto">Borrar todos</button>
+    </div>
+    <div id="systemsList" class="mt-3 sistemasCreados">
+      <!-- JS inserta tarjetas de sistemas aquí -->
+    </div>
+  </section>
+
+  <!-- Bootstrap JS (opcional) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+          crossorigin="anonymous"></script>
+
+  <!-- Tus JS: 2 archivos (ES modules) -->
+  <!-- Nota: app.js importa state.js; puedes dejar solo app.js.
+       Si tu profe exige “dos referenciados”, puedes dejar ambos como aquí. -->
+  <script type="module" src="JS/state.js"></script>
+  <script type="module" src="JS/main.js"></script>
 </body>
 </html>

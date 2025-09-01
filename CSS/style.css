@@ -1,30 +1,47 @@
+.video-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      min-width: 100%;
+      min-height: 100%;
+      z-index: -1;
+      object-fit: cover;
+}
+
 .card{
     width: 30%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 1% 35% 35%;
+    margin: 1% 35% 0;
+}
+
+.cardAgregar{
+    justify-items: right;
+}
+
+.agregar,.resumen{
+    margin: 1% 0 0;
+    width: 40%;
+}
+
+.d-flex{
+    justify-content: center;
 }
 
 .card-body{
     text-align: center;
 }
 
-.base{
-    margin: auto;
-    width: 60%;
-}
-
 .sistemasGuardados{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    flex-wrap: wrap;
+    width: 30%;
+    justify-self: center;
 }
 
-.mostrarguardados{
-    margin-top: 0;
-    margin-left: 10px;
-    margin-right: 20px;
-    margin-bottom: 0 !important;
+.sistemasCreados{
+    justify-items: center;
+}
+
+.texto{
+    color: #fff;
 }
