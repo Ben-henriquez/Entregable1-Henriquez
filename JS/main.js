@@ -86,12 +86,12 @@ function renderSistemas(){
     // Filas de la tabla interna con los planetas del sistema guardado
     const rows = s.planetas.length ? s.planetas.map((p,i)=>`
       <tr data-sys="${s.id}" data-i="${i}">
-        <td class="nombre-planeta" contenteditable="false">${p.nombre}</td> <!-- pname → nombre-planeta -->
+        <td class="nombre-planeta" contenteditable="false">${p.nombre}</td>
         <td class="masa-planeta" contenteditable="false">${p.masa}</td>
         <td class="cantidad-planeta" contenteditable="false">${p.cantidad}</td>
         <td class="text-end">
-          <button class="btn btn-sm btn-outline-secondary" dataccion="sp-edit" data-sys="${s.id}" data-i="${i}">Editar</button> <!-- sp-edit → sistema-editar-planeta -->
-          <button class="btn btn-sm btn-outline-danger" dataccion="sp-eli" data-sys="${s.id}" data-i="${i}">Eliminar</button> <!-- sp-del  → sistema-eliminar-planeta -->
+          <button class="btn btn-sm btn-outline-secondary" dataccion="sp-edit" data-sys="${s.id}" data-i="${i}">Editar</button>
+          <button class="btn btn-sm btn-outline-danger" dataccion="sp-eli" data-sys="${s.id}" data-i="${i}">Eliminar</button>
         </td>
       </tr>`).join("")
     : `<tr><td colspan="4" class="text-muted">Sin planetas</td></tr>`;
