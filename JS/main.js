@@ -39,32 +39,32 @@ function renderBuilder(){
   // - Si SÍ estamos editando esa fila se procede a mostrar inputs + botones Guardar y Cancelar
     const rows = builder.planetas.length
       ? builder.planetas.map((p,i)=>{
-          const editando = builder.editIndice === i;
-          if (!editando) {
-            return `
-              <tr>
-                <td>${p.nombre}</td>
-                <td>${p.masa}</td>
-                <td>${p.cantidad}</td>
-                <td class="text-end">
-                  <button class="btn btn-sm btn-outline-secondary" dataccion="buil-edit" data-i="${i}">Editar</button>
-                  <button class="btn btn-sm btn-outline-danger" dataccion="buil-eli" data-i="${i}">Eliminar</button>
-                </td>
-              </tr>`;
-          } else {
-            return `
-              <tr>
-                <td><input class="form-control form-control-sm edi-name" value="${p.nombre}"></td>
-                <td><input class="form-control form-control-sm b-masa" type="number" step="0.01" min="0" value="${p.masa}"></td>
-                <td><input class="form-control form-control-sm b-cant" type="number" min="1" step="1" value="${p.cantidad}"></td>
-                <td class="text-end">
-                  <button class="btn btn-sm btn-primary" dataccion="b-save" data-i="${i}">Guardar</button>
-                  <button class="btn btn-sm btn-outline-secondary" dataccion="b-esc">Cancelar</button>
-                </td>
-              </tr>`;
-          }
-        }).join("")
-      : `<tr><td colspan="4" class="text-muted">Aún no agregas planetas.</td></tr>`;
+        const editando = builder.editIndice === i;
+        if (!editando) {
+          return `
+            <tr>
+              <td>${p.nombre}</td>
+              <td>${p.masa}</td>
+              <td>${p.cantidad}</td>
+              <td class="text-end">
+                <button class="btn btn-sm btn-outline-secondary" data-act="buil-edit" data-i="${i}">Editar</button>
+                <button class="btn btn-sm btn-outline-danger" data-act="buil-eli" data-i="${i}">Eliminar</button>
+              </td>
+            </tr>`;
+        } else {
+          return `
+            <tr>
+              <td><input class="form-control form-control-sm edi-name" value="${p.nombre}"></td>
+              <td><input class="form-control form-control-sm b-masa" type="number" step="0.01" min="0" value="${p.masa}"></td>
+              <td><input class="form-control form-control-sm b-cant" type="number" min="1" step="1" value="${p.cantidad}"></td>
+              <td class="text-end">
+                <button class="btn btn-sm btn-primary" data-act="b-save" data-i="${i}">Guardar</button>
+                <button class="btn btn-sm btn-outline-secondary" data-act="b-esc">Cancelar</button>
+              </td>
+            </tr>`;
+        }
+      }).join("")
+    : `<tr><td colspan="4" class="text-muted">Aún no agregas planetas.</td></tr>`;
 
   // Inserta el HTML generado en el <tbody> del builder
   $("#cuerpoTabla").innerHTML = rows;
@@ -76,13 +76,15 @@ function renderBuilder(){
 function renderSistemas(){
   const cont = $("#listaSistemas");
   // Trae una copia del estado persistido (para que no lo puedas no puedas modificar sin querer)
-  const systems = obtenerSist();
-  if(!systems.length){ cont.innerHTML=`<div class="text-muted">Aún no hay sistemas guardados.</div>`; return; }
+  if(!systems.length){
+    cont.innerHTML=`<div class="text-muted">Aún no hay sistemas guardados.</div>`;
+    return;
+  }
 
   // Armamos cada tarjeta de sistema (ordenada por id descendente)
   cont.innerHTML = systems.slice().sort((a,b)=>b.id-a.id).map(s=>{
     const {totalCant,totalMasa,rest}=Totales(s.planetas);
-    const fecha = dayjs(s.Formatfecha).format("DD/MM/YYYY HH:mm");
+    const fecha = dayjs(s.fechaISO).format("DD/MM/YYYY HH:mm");
     // Filas de la tabla interna con los planetas del sistema guardado
     const rows = s.planetas.length ? s.planetas.map((p,i)=>`
       <tr data-sys="${s.id}" data-i="${i}">
@@ -90,8 +92,8 @@ function renderSistemas(){
         <td class="masa-planeta" contenteditable="false">${p.masa}</td>
         <td class="cantidad-planeta" contenteditable="false">${p.cantidad}</td>
         <td class="text-end">
-          <button class="btn btn-sm btn-outline-secondary" dataccion="sp-edit" data-sys="${s.id}" data-i="${i}">Editar</button>
-          <button class="btn btn-sm btn-outline-danger" dataccion="sp-eli" data-sys="${s.id}" data-i="${i}">Eliminar</button>
+          <button class="btn btn-sm btn-outline-secondary" data-act="sp-edit" data-sys="${s.id}" data-i="${i}">Editar</button>
+          <button class="btn btn-sm btn-outline-danger" data-act="sp-eli" data-sys="${s.id}" data-i="${i}">Eliminar</button>
         </td>
       </tr>`).join("")
     : `<tr><td colspan="4" class="text-muted">Sin planetas</td></tr>`;
@@ -104,8 +106,8 @@ function renderSistemas(){
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <div class="d-flex align-items-center gap-2">
-              <h5 class="mb-0 system-name">${nombre}</h5> <!-- system-name → titulo-sistema -->
-              <button class="btn btn-sm btn-outline-primary" dataccion="sis-name" data-sys="${s.id}">Editar nombre</button> <!-- s-name → sistema-editar-nombre -->
+              <h5 class="mb-0 system-name">${nombre}</h5>
+              <button class="btn btn-sm btn-outline-primary" data-act="sis-name" data-sys="${s.id}">Editar nombre</button>
             </div>
             <small class="text-muted">${fecha}</small>
           </div>
@@ -121,7 +123,7 @@ function renderSistemas(){
             </table>
           </div>
           <div class="d-flex gap-2">
-            <button class="btn btn-outline-danger btn-sm" dataccion="s-eli" data-sys="${s.id}">Eliminar sistema</button> <!-- s-del → sistema-eliminar -->
+            <button class="btn btn-outline-danger btn-sm" data-act="s-eli" data-sys="${s.id}">Eliminar sistema</button>
           </div>
         </div>
       </div>`;
@@ -135,13 +137,15 @@ function agregarPlaneta(form){
   if(!p.nombre) return messenger("warning","Indica un nombre.");
   if(isNaN(p.masa)||p.masa<0) return messenger("warning","Masa inválida.");
   if(isNaN(p.cantidad)||p.cantidad<1) return messenger("warning","Cantidad inválida.");
-  // Valida que no superes la masa máxima disponible (usa lógica del estado)
   if(!agnadirPlaneta(builder.planetas,p)){
     const {rest}=Totales(builder.planetas); const max=(rest/p.cantidad).toFixed(2);
     return messenger("warning",`Excedes el tope (${format(MASA_TOPE)}). Restante ${format(rest)}. Máx ${max} por unidad.`);
   }
   // Agrega, limpia el form y re-dibuja
-  builder.planetas.push(p); form.reset(); renderBuilder(); messenger("success","Planeta agregado.");
+  builder.planetas.push(p);
+  form.reset();
+  renderBuilder();
+  messenger("Éxito","Planeta agregado.");
 }
 
 // Pasa al modo de “poner nombre” para poder guardar el sistema
@@ -149,13 +153,16 @@ function iniciarNombre(){
   if(!builder.planetas.length) return messenger("warning","Agrega al menos un planeta.");
   builder.pedirnombre=true; renderBuilder(); $("#inputSystemName")?.focus();
 }
+
 // Toma el nombre, guarda el sistema completo en localStorage (vía state.js) y resetea el builder
 function guardarSistema(){
   const name=($("#inputSystemName")?.value||"").trim();
   if(!name) return messenger("warning","Ingresa un nombre.");
-  agnadirSist(name,builder.planetas); builder.planetas=[]; builder.pedirnombre=false; builder.editIndice=null;
-  renderBuilder(); renderSistemas(); messenger("success","Sistema guardado.");
+  agnadirSist(name,builder.planetas);
+  builder.planetas=[]; builder.pedirnombre=false; builder.editIndice=null;
+  renderBuilder(); renderSistemas(); messenger("Éxito","Sistema guardado.");
 }
+
 // Resetea el builder manualmente (sin guardar)
 function nuevoSistema(){
   builder.planetas=[]; builder.pedirnombre=false; builder.editIndice=null;
@@ -164,7 +171,8 @@ function nuevoSistema(){
 
 // Un único listener para toda la página. Captura clicks en botones y decide qué hacer
 document.body.addEventListener("click",(e)=>{
-  const b=e.target.closest("btn"); if(!b) return;
+  const b=e.target.closest("button"); // <- 'button', no 'btn'
+  if(!b) return;
 
   // Acciones del builder (por id de cada botón)
   if(b.id==="btnTerminarSistema") return iniciarNombre();
@@ -179,49 +187,48 @@ document.body.addEventListener("click",(e)=>{
   if(b.dataset.act==="b-save"){
     // Guardar edición inline de una fila del builder
     const i = Number(b.dataset.i);
-    const fila = b.closest("fila");
+    const fila = b.closest("tr");
     const name = fila.querySelector(".edi-name").value.trim();
     const masa = Number(fila.querySelector(".b-masa").value);
     const cant = Math.max(1, Math.floor(Number(fila.querySelector(".b-cant").value)||0));
-    if(!name) return messenger("warning","Nombre vacío.");
-    if(isNaN(masa)||masa<0) return messenger("warning","Masa inválida.");
-    if(isNaN(cant)||cant<1) return messenger("warning","Cantidad inválida.");
+    if(!name) return messenger("Atento","Nombre vacío.");
+    if(isNaN(masa)||masa<0) return messenger("Atento","Masa inválida.");
+    if(isNaN(cant)||cant<1) return messenger("Atento","Cantidad inválida.");
 
     // Validamos que el cambio no exceda el tope total de masa del sistema en edición de 1000
     const copy = builder.planetas.map(p=>({...p}));
     copy[i] = { nombre:name, masa, cantidad:cant };
-    if (Totales(copy).rest < 0) return messenger("warning","Con esos valores excedes la masa máxima del sistema.");
+    if (Totales(copy).rest < 0) return messenger("Atento","Con esos valores excedes la masa máxima del sistema.");
 
     builder.planetas[i] = { nombre:name, masa, cantidad:cant };
-    builder.editIndice=null; renderBuilder(); messenger("success","Planeta actualizado.");
+    builder.editIndice=null; renderBuilder(); messenger("Éxito","Planeta actualizado.");
     return;
   }
 
   // Acciones sobre “Sistemas guardados”
-  if(b.id==="btnLimpiarSistemas"){ clsAll(); renderSistemas(); return messenger("success","Se borraron todos los sistemas."); }
-  if(b.dataset.act==="s-eli"){ borrarSist(Number(b.dataset.sys)); renderSistemas(); return messenger("success","Sistema eliminado."); }
+  if(b.id==="btnLimpiarSistemas"){ clsAll(); renderSistemas(); return messenger("Éxito","Se borraron todos los sistemas."); }
+  if(b.dataset.act==="s-eli"){ borrarSist(Number(b.dataset.sys)); renderSistemas(); return messenger("Éxito","Sistema eliminado."); }
 
   // Editar nombre del sistema
   if(b.dataset.act==="sis-name"){
-    const card=b.closest(".card"); const h=card.querySelector(".system-name");
-    // Obtenemos el id del sistema desde la card
-    const sysId=Number(card.parentElement.parentElement.dataset.sys || card.dataset.sys || card.closest(".card").dataset.sys);
+    const card=b.closest(".card");
+    const h=card.querySelector(".system-name");
+    const sysId=Number(card.dataset.sys); // la card ya tiene data-sys
     const editando=h.getAttribute("contenteditable")==="true";
-    if(!editando){ // Entrar en modo edición
+    if(!editando){
       h.setAttribute("contenteditable","true"); h.focus(); b.textContent="Guardar nombre";
-    }
-    else{         // Guardar los cambios
-      const name=h.textContent.trim(); if(!name) return messenger("warning","Nombre vacío.");
+    } else {
+      const name=h.textContent.trim(); if(!name) return messenger("Atento","Nombre vacío.");
       renameSist(sysId,name);
       h.setAttribute("contenteditable","false"); b.textContent="Editar nombre";
-      renderSistemas(); messenger("success","Nombre actualizado.");
+      renderSistemas(); messenger("Éxito","Nombre actualizado.");
     }
     return;
   }
 
   // Editar un planeta dentro de un sistema guardado
   if(b.dataset.act==="sp-edit"){
-    const fila=b.closest("fila");
+    const fila=b.closest("tr");
     const sysId=Number(b.dataset.sys);
     const i=Number(b.dataset.i);
     const editando=fila.dataset.editando==="1";
@@ -239,10 +246,10 @@ document.body.addEventListener("click",(e)=>{
 
       // Creo botón “Cancelar” al lado del “Guardar”
       const actionsTd = fila.querySelector("td:last-child");
-      const cancelBtn = document.createElement("btn");
+      const cancelBtn = document.createElement("button");
       cancelBtn.className="btn btn-sm btn-outline-secondary ms-2";
       cancelBtn.textContent="Cancelar";
-      cancelBtn.setAttribute("dataccion","sist-cancel");
+      cancelBtn.setAttribute("data-act","sist-cancel");
       cancelBtn.setAttribute("data-sys", String(sysId));
       cancelBtn.setAttribute("data-i", String(i));
       actionsTd.appendChild(cancelBtn);
@@ -252,30 +259,27 @@ document.body.addEventListener("click",(e)=>{
       const masa=Number(fila.querySelector(".masa-planeta").textContent.trim());
       const cant=Math.max(1, Math.floor(Number(fila.querySelector(".cantidad-planeta").textContent.trim())||0));
 
-      if(!name) return messenger("warning","Nombre vacío.");
-      if(isNaN(masa)||masa<0) return messenger("warning","Masa inválida.");
-      if(isNaN(cant)||cant<1) return messenger("warning","Cantidad inválida.");
-
+      if(!name) return messenger("Atento","Nombre vacío.");
+      if(isNaN(masa)||masa<0) return messenger("Atento","Masa inválida.");
+      if(isNaN(cant)||cant<1) return messenger("Atento","Cantidad inválida.");
       // Validación contra el tope de masa del sistema guardado
       const sys=obtenerSist().find(s=>s.id===sysId);
       const copy=sys.planetas.map(p=>({...p})); copy[i]={nombre:name, masa, cantidad:cant};
-      if (Totales(copy).rest < 0) return messenger("warning","Excedes la masa máxima del sistema.");
-
+      if (Totales(copy).rest < 0) return messenger("Atento","Excedes la masa máxima del sistema.");
       renamePlaneta(sysId,i,{nombre:name, masa, cantidad:cant});
       fila.dataset.editando="0";
       fila.querySelectorAll(".nombre-planeta,.masa-planeta,.cantidad-planeta").forEach(td=>td.setAttribute("contenteditable","false"));
       b.textContent="Editar";
-      // Eliminar botón “Cancelar” y refrescar totales
-      const cancel = fila.querySelector('[dataccion="sist-cancel"]');
+      const cancel = fila.querySelector('[data-act="sist-cancel"]');
       if (cancel) cancel.remove();
-      renderSistemas(); messenger("success","Planeta actualizado.");
+      renderSistemas(); messenger("Éxito","Planeta actualizado.");
     }
     return;
   }
 
   // Cancelar edición de un planeta dentro de un sistema guardado
   if(b.dataset.act==="sist-cancel"){
-    const fila=b.closest("fila");
+    const fila=b.closest("tr");
     // Restaurar los valores guardados al entrar a edición
     fila.querySelector(".nombre-planeta").textContent = fila.dataset.origName || fila.querySelector(".nombre-planeta").textContent;
     fila.querySelector(".masa-planeta").textContent = fila.dataset.origMasa || fila.querySelector(".masa-planeta").textContent;
@@ -283,19 +287,26 @@ document.body.addEventListener("click",(e)=>{
     fila.dataset.editando="0";
     fila.querySelectorAll(".nombre-planeta,.masa-planeta,.cantidad-planeta").forEach(td=>td.setAttribute("contenteditable","false"));
     // Restaurar botón “Editar” y remover “Cancelar”
-    const editBtn = fila.querySelector('[dataccion="sp-edit"]');
+    const editBtn = fila.querySelector('[data-act="sp-edit"]');
     if (editBtn) editBtn.textContent = "Editar";
-    const cancel = fila.querySelector('[dataccion="sist-cancel"]');
+    const cancel = fila.querySelector('[data-act="sist-cancel"]');
     if (cancel) cancel.remove();
     return;
   }
 
   // Eliminar planeta de un sistema guardado
-  if(b.dataset.act==="sp-eli"){ borrarPlaneta(Number(b.dataset.sys),Number(b.dataset.i)); renderSistemas(); return messenger("success","Planeta eliminado."); }
+  if(b.dataset.act==="sp-eli"){
+    borrarPlaneta(Number(b.dataset.sys),Number(b.dataset.i));
+    renderSistemas();
+    return messenger("Éxito","Planeta eliminado.");
+  }
 });
 
 // Manejo del submit del formulario del builder (agrega un planeta nuevo al sistema)
-$("#form-add-planet").addEventListener("submit",(e)=>{ e.preventDefault(); agregarPlaneta(e.currentTarget); });
+$("#form-add-planet").addEventListener("submit",(e)=>{
+  e.preventDefault();
+  agregarPlaneta(e.currentTarget);
+});
 
 // Inicializa el store (carga desde localStorage si es que ya existe un sistema creado o desde data/sistemas.json con fetch) y procede a dibujar la UI inicial.
 await EstadoCarga();
