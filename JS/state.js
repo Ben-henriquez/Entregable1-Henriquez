@@ -1,80 +1,79 @@
-// Capa de “estado” y persistencia. Aquí NO hay DOM ni HTML.
-// Solo funciones para leer/guardar datos y utilidades de negocio (sumas, validaciones).
+//Creado por Benjamín Henríquez
 
-export const MASS_CAP = 1000;          // Masa máxima del sistema
-const KEY = "sistemas_solares";        // Clave de localStorage
+// Solo funciones para leer/guardar datos y utilidades de negocio (sumas y validaciones).
+export const MASA_TOPE = 1000;
+const KEY = "sistemas_solares";
 
-// Estructura en memoria (no exportamos directa para evitar mutaciones accidentales)
-let systems = []; // [{id, fechaISO, nombre, planets:[{nombre, masa, cantidad}]}]
+// Estructura en memoria (no exportamos directa para evitar ediciones accidentales)
+let systems = [];
 
-// Inicializa el store:
-// 1) Si hay datos en localStorage, los usa.
-// 2) Si NO hay, intenta cargar “data/sistemas.json” con fetch (base simulada) y lo persiste.
-// 3) Si algo falla, deja un arreglo vacío y persiste.
-export async function initStore() {
+// Inicializa el simulador:
+// 1. Si hay datos en localStorage, los usa.
+// 2. Si NO hay, intenta cargar “data/sistemas.json” con fetch (base simulada) y lo persiste.
+// 3. Si algo falla, deja un arreglo vacío y persiste.
+export async function cargarEstado() {
   try {
     const saved = localStorage.getItem(KEY);
     if (saved) { systems = JSON.parse(saved) || []; return; }
     // carga inicial desde JSON
-    const res = await fetch("JSON/sistemas.json");
+    const res = await fetch("data/sistemas.json");
     if (!res.ok) throw new Error("HTTP " + res.status);
     systems = await res.json();
     save();
   } catch (e) {
-    systems = []; save(); // fallback
+    systems = []; save();
   }
 }
 
-// Devuelve una COPIA (shallow) para no exponer referencia interna
-export const getSystems = () => systems.slice();
+// Devuelve una COPIA  para no exponer referencia interna
+export const obtenerSist = () => systems.slice();
 
-// Guarda el estado actual en localStorage (try/catch por si storage está lleno/bloqueado)
+// Guarda el estado actual en localStorage (try/catch por si storage está lleno o bloqueado)
 export function save() { try { localStorage.setItem(KEY, JSON.stringify(systems)); } catch {} }
 
-// Borra todo el estado (y persiste esa limpieza)
-export function clearAll() { systems = []; save(); }
+// Borra todo el estado (y persiste en limpiar)
+export function clsAll() { systems = []; save(); }
 
-// ===== CRUD de sistemas =====
-
-// Crea un sistema nuevo a partir de un nombre + arreglo de planetas y lo persiste
-export function addSystem(nombre, planets) {
-  systems.push({ id: Date.now(), fechaISO: new Date().toISOString(), nombre: (nombre||"").trim(), planets: planets.map(p=>({...p})) });
+// Crea un sistema nuevo a partir de un nombre más arreglo de planetas y lo persiste
+export function agnadirSist(nombre, planetas) {
+  systems.push({ id: Date.now(), fechaISO: new Date().toISOString(), nombre: (nombre||"").trim(), planetas: planetas.map(p=>({...p})) });
   save();
 }
 
 // Elimina por id
-export function deleteSystem(id) { systems = systems.filter(s => s.id !== id); save(); }
+export function borrarSist(id) { systems = systems.filter(s => s.id !== id); save(); }
 
 // Cambia el nombre de un sistema
-export function updateSystemName(id, name) { const s = systems.find(x=>x.id===id); if (s){ s.nombre=(name||"").trim(); save(); } }
+export function renameSist(id, name) {
+  const s = systems.find(x=>x.id===id);
+  if (s){ s.nombre=(name||"").trim(); save(); }
+}
 
 // Actualiza un planeta de un sistema (índice i). Devuelve false si no existe.
-export function updateSystemPlanet(id, i, data){
+export function renamePlaneta(id, i, data){
   const s=systems.find(x=>x.id===id);
-  if(!s||!s.planets[i])return false;
-  s.planets[i]={...s.planets[i],...data};
+  if(!s||!s.planetas[i])return false;
+  s.planetas[i]={...s.planetas[i],...data};
   save();
   return true;
 }
 
 // Elimina un planeta (índice i) de un sistema
-export function deleteSystemPlanet(id, i){
+export function borrarPlaneta(id, i){
   const s=systems.find(x=>x.id===id);
   if(!s)return;
-  s.planets.splice(i,1);
+  s.planetas.splice(i,1);
   save();
 }
 
-// ===== Utilidades de negocio =====
-
-// Dado un arreglo de planetas, calcula totales y “restante” respecto a MASS_CAP
-export function summarize(planets){
-  const totalMasa = planets.reduce((a,p)=>a+Number(p.masa)*Number(p.cantidad),0);
-  const totalCant = planets.reduce((a,p)=>a+Number(p.cantidad),0);
-  return { totalCant, totalMasa, rest: MASS_CAP-totalMasa };
+// Dado un arreglo de planetas, calcula totales y “restante” respecto a MASS_TOPE
+export function Totales(planetas){
+  const totalMasa = planetas.reduce((a,p)=>a+Number(p.masa)*Number(p.cantidad),0);
+  const totalCant = planetas.reduce((a,p)=>a+Number(p.cantidad),0);
+  return { totalCant, totalMasa, rest: MASA_TOPE-totalMasa };
 }
 
-// Verifica si puedo agregar (masa*cantidad) a la lista actual sin pasarme del tope
-export function canAddPlanet(curr,{masa,cantidad}){
-  return Number(masa)*Number(cantidad) <= summarize(curr).rest;
+// Verifica si puedo agregar más masa a la lista actual sin pasarme del límite de 1000
+export function agnadirPlaneta(curr,{masa,cantidad}){
+  return Number(masa)*Number(cantidad) <= Totales(curr).rest;
 }
