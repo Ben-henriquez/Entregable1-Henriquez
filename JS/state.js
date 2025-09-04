@@ -11,7 +11,7 @@ let systems = [];
 // 1. Si hay datos en localStorage, los usa.
 // 2. Si NO hay, intenta cargar “data/sistemas.json” con fetch (base simulada) y lo persiste.
 // 3. Si algo falla, deja un arreglo vacío y persiste.
-export async function EstadoCarga() {
+export async function EstadoCarga(){
   try {
     const saved = localStorage.getItem(KEY);
     if (saved) { systems = JSON.parse(saved) || []; return; }
