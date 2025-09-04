@@ -68,3 +68,5 @@ Checklist de la consigna final:
 6. Validaciones y mensajes UX (sin alert/confirm/prompt).
 7. Librería externa JS usada (dayjs).
 8. Código dividido y comentado, HTML sin listados estáticos (render con JS).
+
+Se hizo uso de IA para revisar errores y poder corregir.
